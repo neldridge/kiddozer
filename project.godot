@@ -14,3 +14,11 @@ config/name="KidDozer"
 run/main_scene="uid://cwq5cov2yftis"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameState="*res://scripts/gamestate.gd"
+
+[global_group]
+
+damager=""

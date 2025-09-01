@@ -1,7 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://cr06ayqsfufog"]
+[gd_scene load_steps=13 format=3 uid="uid://cr06ayqsfufog"]
 
 [ext_resource type="Texture2D" uid="uid://dinunbyjyt2qu" path="res://sprites/Idle.png" id="1_f2yte"]
 [ext_resource type="Script" uid="uid://cqbb3ongekr4h" path="res://scripts/dozer.gd" id="1_qe0wl"]
+[ext_resource type="AudioStream" uid="uid://15lrx8d02qml" path="res://sounds/bulldozer_idle.mp3" id="3_53llr"]
+[ext_resource type="AudioStream" uid="uid://ckglk4r6yea6a" path="res://sounds/bulldozer_moving.mp3" id="4_2ggiw"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qe0wl"]
 atlas = ExtResource("1_f2yte")
@@ -54,9 +56,11 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_f2yte"]
-size = Vector2(31.75, 22.25)
+size = Vector2(36, 23)
 
-[node name="Dozer" type="CharacterBody2D"]
+[node name="Dozer" type="CharacterBody2D" groups=["damager"]]
+z_index = 100
+collision_layer = 2
 script = ExtResource("1_qe0wl")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -68,5 +72,12 @@ autoplay = "idle"
 frame_progress = 0.37713
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(20.125, -16.875)
+position = Vector2(19, -16.5)
 shape = SubResource("RectangleShape2D_f2yte")
+
+[node name="IdleSound" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(19, -16.5)
+stream = ExtResource("3_53llr")
+
+[node name="MovingSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_2ggiw")
