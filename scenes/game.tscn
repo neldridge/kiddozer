@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://cwq5cov2yftis"]
+
+[ext_resource type="PackedScene" uid="uid://cr06ayqsfufog" path="res://scenes/dozer.tscn" id="1_uwrxv"]
+[ext_resource type="PackedScene" uid="uid://cvrrymhmgf0hq" path="res://scenes/mid.tscn" id="2_yqjtg"]
+
+[node name="Game" type="Node2D"]
+
+[node name="Dozer" parent="." instance=ExtResource("1_uwrxv")]
+position = Vector2(-7, 6)
+
+[node name="Camera2D" type="Camera2D" parent="Dozer"]
+zoom = Vector2(2, 2)
+position_smoothing_enabled = true
+
+[node name="Mid" parent="." instance=ExtResource("2_yqjtg")]
+position = Vector2(12, -2)
+scale = Vector2(0.457, 0.457)
+tile_map_data = PackedByteArray(0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0)
