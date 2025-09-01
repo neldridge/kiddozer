@@ -24,20 +24,24 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 	# ---- Sound logic ----
+	var is_intending_move: bool = abs(direction) > 0.0
+
 	if is_on_floor():
-		if velocity.x == 0 and velocity.y == 0:
+		if is_intending_move:
+			# Moving (including pushing against walls)
+			if not moving_sound.playing:
+				moving_sound.play()
+			if idle_sound.playing:
+				idle_sound.stop()
+		else:
 			# Idle
 			if not idle_sound.playing:
 				idle_sound.play()
 			if moving_sound.playing:
 				moving_sound.stop()
-		else:
-			# Moving
-			if not moving_sound.playing:
-				moving_sound.play()
-			if idle_sound.playing:
-				idle_sound.stop()
 	else:
-		# In air: stop both
+		# In air: always moving sound
+		if not moving_sound.playing:
+			moving_sound.play()
 		if idle_sound.playing:
 			idle_sound.stop()

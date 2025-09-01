@@ -27,53 +27,35 @@ tile_map_data = PackedByteArray("AAAAAAAAAAACAAAAAAABAAAAAAACAAAAAAACAAAAAAACAAA
 
 [node name="Rock" parent="Rocks/Phase1" instance=ExtResource("3_lnu2h")]
 position = Vector2(140, -7)
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock2" parent="Rocks/Phase1" instance=ExtResource("3_lnu2h")]
 position = Vector2(459, 131)
 rotation = -0.958186
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock3" parent="Rocks/Phase1" instance=ExtResource("3_lnu2h")]
 position = Vector2(1018, 14)
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock4" parent="Rocks/Phase1" instance=ExtResource("3_lnu2h")]
 position = Vector2(522, 64)
 rotation = 3.14159
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock5" parent="Rocks/Phase1" instance=ExtResource("3_lnu2h")]
 position = Vector2(874, 133)
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock6" parent="Rocks/Phase1" instance=ExtResource("3_lnu2h")]
 position = Vector2(629, 132)
 rotation = 1.07687
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock7" parent="Rocks/Phase1" instance=ExtResource("3_lnu2h")]
 position = Vector2(277, -6)
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock8" parent="Rocks/Phase1" instance=ExtResource("3_lnu2h")]
 position = Vector2(558, 133)
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock9" parent="Rocks/Phase1" instance=ExtResource("3_lnu2h")]
 z_index = -1
 position = Vector2(680, 61)
 rotation = 3.14159
-max_hp = 1
-flash_time = 0.08
 
 [node name="Phase2" type="Node" parent="Rocks"]
 
@@ -82,36 +64,24 @@ position = Vector2(1494, 480)
 
 [node name="Rock10" parent="Rocks/Phase2" instance=ExtResource("3_lnu2h")]
 position = Vector2(1383, 484)
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock11" parent="Rocks/Phase2" instance=ExtResource("3_lnu2h")]
 position = Vector2(1697, 573)
 rotation = -0.958186
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock12" parent="Rocks/Phase2" instance=ExtResource("3_lnu2h")]
 position = Vector2(2097, 504)
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock13" parent="Rocks/Phase2" instance=ExtResource("3_lnu2h")]
 position = Vector2(1794, 476)
 rotation = 3.14159
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock14" parent="Rocks/Phase2" instance=ExtResource("3_lnu2h")]
 position = Vector2(1999, 528)
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock15" parent="Rocks/Phase2" instance=ExtResource("3_lnu2h")]
 position = Vector2(1894, 579)
 rotation = 1.07687
-max_hp = 1
-flash_time = 0.08
 
 [node name="PurpleOre2" parent="Rocks/Phase2" instance=ExtResource("4_p57ef")]
 position = Vector2(2261, 327)
@@ -120,38 +90,26 @@ rotation = -0.837758
 [node name="Rock16" parent="Rocks/Phase2" instance=ExtResource("3_lnu2h")]
 position = Vector2(2184, 403)
 rotation = -0.120428
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock17" parent="Rocks/Phase2" instance=ExtResource("3_lnu2h")]
 position = Vector2(2207, 384)
 rotation = -0.120428
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock18" parent="Rocks/Phase2" instance=ExtResource("3_lnu2h")]
 position = Vector2(2286, 309)
 rotation = -0.120428
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock19" parent="Rocks/Phase2" instance=ExtResource("3_lnu2h")]
 position = Vector2(1982, 453)
 rotation = -0.120428
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock20" parent="Rocks/Phase2" instance=ExtResource("3_lnu2h")]
 position = Vector2(1748, 532)
 rotation = -0.120428
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock21" parent="Rocks/Phase2" instance=ExtResource("3_lnu2h")]
 position = Vector2(2369, 207)
 rotation = -0.120428
-max_hp = 1
-flash_time = 0.08
 
 [node name="Phase3" type="Node" parent="Rocks"]
 
@@ -160,36 +118,24 @@ position = Vector2(2573, 2)
 
 [node name="Rock10" parent="Rocks/Phase3" instance=ExtResource("3_lnu2h")]
 position = Vector2(2451, 157)
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock11" parent="Rocks/Phase3" instance=ExtResource("3_lnu2h")]
 position = Vector2(2585, 65)
 rotation = -0.958186
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock12" parent="Rocks/Phase3" instance=ExtResource("3_lnu2h")]
 position = Vector2(2715, 58)
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock13" parent="Rocks/Phase3" instance=ExtResource("3_lnu2h")]
 position = Vector2(2510, 79)
 rotation = 3.14159
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock14" parent="Rocks/Phase3" instance=ExtResource("3_lnu2h")]
 position = Vector2(2894, 27)
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock15" parent="Rocks/Phase3" instance=ExtResource("3_lnu2h")]
 position = Vector2(2812, 62)
 rotation = 1.07687
-max_hp = 1
-flash_time = 0.08
 
 [node name="PurpleOre2" parent="Rocks/Phase3" instance=ExtResource("4_p57ef")]
 position = Vector2(2831, -85.9999)
@@ -198,38 +144,26 @@ rotation = -0.837758
 [node name="Rock16" parent="Rocks/Phase3" instance=ExtResource("3_lnu2h")]
 position = Vector2(2946, -70)
 rotation = -0.120428
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock17" parent="Rocks/Phase3" instance=ExtResource("3_lnu2h")]
 position = Vector2(3031, -194)
 rotation = -0.120428
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock18" parent="Rocks/Phase3" instance=ExtResource("3_lnu2h")]
 position = Vector2(2667, -127)
 rotation = -0.120428
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock19" parent="Rocks/Phase3" instance=ExtResource("3_lnu2h")]
 position = Vector2(2510, -144)
 rotation = -0.120428
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock20" parent="Rocks/Phase3" instance=ExtResource("3_lnu2h")]
 position = Vector2(2453, -189)
 rotation = -0.120428
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock21" parent="Rocks/Phase3" instance=ExtResource("3_lnu2h")]
 position = Vector2(2782, -123)
 rotation = -0.120428
-max_hp = 1
-flash_time = 0.08
 
 [node name="Phase4" type="Node" parent="Rocks"]
 
@@ -239,36 +173,24 @@ position = Vector2(994, -493)
 [node name="Rock10" parent="Rocks/Phase4" instance=ExtResource("3_lnu2h")]
 position = Vector2(1413, -513)
 rotation = -1.79594
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock11" parent="Rocks/Phase4" instance=ExtResource("3_lnu2h")]
 position = Vector2(1718, -511)
 rotation = -0.958186
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock12" parent="Rocks/Phase4" instance=ExtResource("3_lnu2h")]
 position = Vector2(1846, -511)
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock13" parent="Rocks/Phase4" instance=ExtResource("3_lnu2h")]
 position = Vector2(1622, -520)
 rotation = 3.14159
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock14" parent="Rocks/Phase4" instance=ExtResource("3_lnu2h")]
 position = Vector2(2052, -509)
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock15" parent="Rocks/Phase4" instance=ExtResource("3_lnu2h")]
 position = Vector2(1935, -511)
 rotation = 1.07687
-max_hp = 1
-flash_time = 0.08
 
 [node name="PurpleOre2" parent="Rocks/Phase4" instance=ExtResource("4_p57ef")]
 position = Vector2(2136, -514)
@@ -277,45 +199,32 @@ rotation = -0.837758
 [node name="Rock16" parent="Rocks/Phase4" instance=ExtResource("3_lnu2h")]
 position = Vector2(2265, -386)
 rotation = -0.120428
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock17" parent="Rocks/Phase4" instance=ExtResource("3_lnu2h")]
 position = Vector2(2188, -463)
 rotation = -0.120428
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock18" parent="Rocks/Phase4" instance=ExtResource("3_lnu2h")]
 position = Vector2(1501, -509)
 rotation = -0.120428
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock19" parent="Rocks/Phase4" instance=ExtResource("3_lnu2h")]
 position = Vector2(2378, -267)
 rotation = -0.120428
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock20" parent="Rocks/Phase4" instance=ExtResource("3_lnu2h")]
 position = Vector2(1242, -512)
 rotation = -0.120428
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock21" parent="Rocks/Phase4" instance=ExtResource("3_lnu2h")]
 position = Vector2(1098, -513)
 rotation = -0.120428
-max_hp = 1
-flash_time = 0.08
 
 [node name="Phase5" type="Node" parent="Rocks"]
 
 [node name="PurpleOre3" parent="Rocks/Phase5" instance=ExtResource("4_p57ef")]
 position = Vector2(-169, -200)
 rotation = 2.45393
-scale = Vector2(1, 1)
 
 [node name="PurpleOre" parent="Rocks/Phase5" instance=ExtResource("4_p57ef")]
 position = Vector2(-186, -248)
@@ -324,38 +233,26 @@ rotation = -1.91463
 [node name="Rock10" parent="Rocks/Phase5" instance=ExtResource("3_lnu2h")]
 position = Vector2(280, -361)
 rotation = -1.91463
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock11" parent="Rocks/Phase5" instance=ExtResource("3_lnu2h")]
 position = Vector2(575, -326)
 rotation = 1.67552
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock12" parent="Rocks/Phase5" instance=ExtResource("3_lnu2h")]
 position = Vector2(686, -324)
 rotation = -3.59014
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock13" parent="Rocks/Phase5" instance=ExtResource("3_lnu2h")]
 position = Vector2(462, -333)
 rotation = -3.65996
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock14" parent="Rocks/Phase5" instance=ExtResource("3_lnu2h")]
 position = Vector2(892, -322)
 rotation = 1.48004
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock15" parent="Rocks/Phase5" instance=ExtResource("3_lnu2h")]
 position = Vector2(787, -322)
 rotation = 5.26566
-max_hp = 1
-flash_time = 0.08
 
 [node name="PurpleOre2" parent="Rocks/Phase5" instance=ExtResource("4_p57ef")]
 position = Vector2(976, -327)
@@ -364,43 +261,30 @@ rotation = -4.78744
 [node name="Rock16" parent="Rocks/Phase5" instance=ExtResource("3_lnu2h")]
 position = Vector2(1035, -149)
 rotation = -1.91463
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock17" parent="Rocks/Phase5" instance=ExtResource("3_lnu2h")]
 position = Vector2(1028, -276)
 rotation = -1.91463
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock18" parent="Rocks/Phase5" instance=ExtResource("3_lnu2h")]
 position = Vector2(159, -347)
 rotation = 0.598648
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock19" parent="Rocks/Phase5" instance=ExtResource("3_lnu2h")]
 position = Vector2(374, -342)
 rotation = -3.59014
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock20" parent="Rocks/Phase5" instance=ExtResource("3_lnu2h")]
 position = Vector2(34, -363)
 rotation = -4.18879
-max_hp = 1
-flash_time = 0.08
 
 [node name="Rock21" parent="Rocks/Phase5" instance=ExtResource("3_lnu2h")]
 position = Vector2(-62.0003, -326)
 rotation = -3.46971
-max_hp = 1
-flash_time = 0.08
 
 [node name="PurpleOre4" parent="Rocks/Phase5" instance=ExtResource("4_p57ef")]
 position = Vector2(-65, -203)
 rotation = 2.45393
-scale = Vector2(1, 1)
 
 [node name="PurpleOre5" parent="Rocks/Phase5" instance=ExtResource("4_p57ef")]
 position = Vector2(7.62939e-06, -174)

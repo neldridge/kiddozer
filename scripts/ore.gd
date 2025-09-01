@@ -4,7 +4,7 @@ extends Area2D
 @export var debris_scene: PackedScene        # optional: pre-made debris scene
 @export var loot_scene: PackedScene          # optional: coins/resources to drop
 @export var flash_time: float = 0.08         # hit flash duration (seconds)
-@export var respawn_seconds: float = 10.0    # how long before the rock comes back
+@export var respawn_seconds: float = 20.0    # how long before the rock comes back
 
 var _rock_value: int = 3
 var _hp: int

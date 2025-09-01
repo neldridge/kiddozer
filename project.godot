@@ -22,3 +22,7 @@ GameState="*res://scripts/gamestate.gd"
 [global_group]
 
 damager=""
+
+[rendering]
+
+textures/vram_compression/import_etc2_astc=true
