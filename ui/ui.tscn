@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://ctp76wh2u83qx"]
+
+[ext_resource type="Script" uid="uid://bpouy4sy0s2uo" path="res://ui/ui_label.gd" id="1_nb4k0"]
+
+[node name="UI" type="CanvasLayer"]
+
+[node name="RocksLabel" type="Label" parent="."]
+offset_left = 13.0
+offset_top = 5.0
+offset_right = 53.0
+offset_bottom = 28.0
+script = ExtResource("1_nb4k0")

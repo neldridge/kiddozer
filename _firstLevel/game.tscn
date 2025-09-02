@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://cvrrymhmgf0hq" path="res://_firstLevel/mid.tscn" id="2_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://ds4p4ftbyap2f" path="res://rocks/rock.tscn" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://bifyucip8a2nb" path="res://rocks/purple_ore.tscn" id="4_p57ef"]
-[ext_resource type="Script" uid="uid://bpouy4sy0s2uo" path="res://_firstLevel/ui_label.gd" id="5_p57ef"]
+[ext_resource type="PackedScene" uid="uid://ctp76wh2u83qx" path="res://ui/ui.tscn" id="5_tndy8"]
 
 [node name="Game" type="Node2D"]
 
@@ -290,11 +290,4 @@ rotation = 2.45393
 position = Vector2(7.62939e-06, -174)
 rotation = -1.91463
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="Label" type="Label" parent="CanvasLayer"]
-offset_left = 13.0
-offset_top = 5.0
-offset_right = 53.0
-offset_bottom = 28.0
-script = ExtResource("5_p57ef")
+[node name="UI" parent="." instance=ExtResource("5_tndy8")]
