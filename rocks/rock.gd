@@ -104,6 +104,8 @@ func _respawn() -> void:
 
 func _on_area_entered(area: Area2D) -> void:
 	if area.is_in_group("damager"):
+		if area.has_method("play_on_hit"):
+			area.call_deferred("play_on_hit", self)
 		var dmg_val := 1
 		var maybe_damage = area.get("damage")   # returns null if not present
 		if maybe_damage != null:
@@ -112,6 +114,8 @@ func _on_area_entered(area: Area2D) -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("damager"):
+		if body.has_method("play_on_hit"):
+			body.call_deferred("play_on_hit", self)
 		var dmg_val := 1
 		var maybe_damage = body.get("damage")
 		if maybe_damage != null:

@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://djns7471v73uy"]
+
+[ext_resource type="PackedScene" uid="uid://cvrrymhmgf0hq" path="res://levels/_levelTiles.tscn" id="1_oavfn"]
+[ext_resource type="PackedScene" uid="uid://cr06ayqsfufog" path="res://dozer/dozer.tscn" id="2_1kmda"]
+
+[node name="GameLevel1" type="Node2D"]
+
+[node name="LevelTiles" parent="." instance=ExtResource("1_oavfn")]
+position = Vector2(1.19209e-07, 1.19209e-07)
+tile_map_data = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0)
+
+[node name="Dozer" parent="." instance=ExtResource("2_1kmda")]
+position = Vector2(-6, -8)
