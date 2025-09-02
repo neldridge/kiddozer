@@ -262,18 +262,18 @@ collision_layer = 2
 script = ExtResource("1_qe0wl")
 
 [node name="VisualPivot" type="Node2D" parent="."]
+position = Vector2(-2, 0)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="VisualPivot"]
-position = Vector2(-8.00002, -21.5714)
+position = Vector2(-8, -20)
 scale = Vector2(0.910714, 0.910714)
 sprite_frames = SubResource("SpriteFrames_a6j0l")
-animation = &"attack"
+animation = &"walk"
 autoplay = "idle"
-frame = 10
-frame_progress = 1.0
+frame_progress = 0.191165
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-9.50002, -12.8214)
+position = Vector2(-10, -12)
 shape = SubResource("RectangleShape2D_f2yte")
 
 [node name="IdleSound" type="AudioStreamPlayer2D" parent="."]
@@ -288,3 +288,7 @@ stream = ExtResource("4_2ggiw")
 position = Vector2(-7.00002, -11.5714)
 zoom = Vector2(2, 2)
 position_smoothing_enabled = true
+
+[node name="FloorRay" type="RayCast2D" parent="."]
+position = Vector2(-11, 0)
+target_position = Vector2(0, 24)
