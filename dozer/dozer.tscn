@@ -254,7 +254,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_f2yte"]
-size = Vector2(37, 25.5)
+size = Vector2(24, 21.75)
 
 [node name="Dozer" type="CharacterBody2D" groups=["damager"]]
 z_index = 100
@@ -270,10 +270,11 @@ scale = Vector2(0.910714, 0.910714)
 sprite_frames = SubResource("SpriteFrames_a6j0l")
 animation = &"walk"
 autoplay = "idle"
-frame_progress = 0.191165
+frame_progress = 0.829065
+flip_h = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-10, -12)
+position = Vector2(-14, -10.125)
 shape = SubResource("RectangleShape2D_f2yte")
 
 [node name="IdleSound" type="AudioStreamPlayer2D" parent="."]

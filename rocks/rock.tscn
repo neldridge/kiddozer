@@ -1,9 +1,29 @@
-[gd_scene load_steps=7 format=3 uid="uid://ds4p4ftbyap2f"]
+[gd_scene load_steps=24 format=3 uid="uid://ds4p4ftbyap2f"]
 
 [ext_resource type="Script" uid="uid://b10vrkv86gqmq" path="res://rocks/rock.gd" id="1_ik6fu"]
 [ext_resource type="Texture2D" uid="uid://d14x4fnmnt32l" path="res://rocks/sprites/Rock1.png" id="1_mek2u"]
 [ext_resource type="Texture2D" uid="uid://dahk7raj11o77" path="res://sprites/particles.png" id="2_ik6fu"]
+[ext_resource type="Texture2D" uid="uid://d2bbsg6nvlhx6" path="res://rocks/sprites/Rock1a.png" id="3_62gsx"]
 [ext_resource type="AudioStream" uid="uid://c7a7nanb036on" path="res://rocks/sounds/small-rock-break-194553.mp3" id="4_872ht"]
+[ext_resource type="Texture2D" uid="uid://bwccagdcpl3dr" path="res://rocks/sprites/Rock1b.png" id="4_qs8y8"]
+[ext_resource type="Texture2D" uid="uid://di0tuse2r3vkf" path="res://rocks/sprites/Rock1c.png" id="5_ycyr0"]
+[ext_resource type="Texture2D" uid="uid://r7hxndrfn1nf" path="res://rocks/sprites/Rock1d.png" id="6_03y87"]
+[ext_resource type="Texture2D" uid="uid://b5dgvg6pokc4w" path="res://rocks/sprites/Rock1e.png" id="7_504wj"]
+[ext_resource type="Texture2D" uid="uid://cdo0cr6tyxnol" path="res://rocks/sprites/Rock2.png" id="8_5mdtl"]
+[ext_resource type="Texture2D" uid="uid://cv5gnurwnukvd" path="res://rocks/sprites/Rock2a.png" id="9_vvhtx"]
+[ext_resource type="Texture2D" uid="uid://byne4hjvrkmv1" path="res://rocks/sprites/Rock2b.png" id="10_vl7t6"]
+[ext_resource type="Texture2D" uid="uid://n7fss4m380se" path="res://rocks/sprites/Rock2c.png" id="11_acipe"]
+[ext_resource type="Texture2D" uid="uid://bjttaast3ogcx" path="res://rocks/sprites/Rock4.png" id="12_65wy2"]
+[ext_resource type="Texture2D" uid="uid://dbfq28j8pjeiv" path="res://rocks/sprites/gem1.png" id="13_vl7t6"]
+[ext_resource type="Texture2D" uid="uid://l8o1s7vv24uv" path="res://rocks/sprites/Ore1.png" id="14_acipe"]
+[ext_resource type="Texture2D" uid="uid://d01xys0n37d3w" path="res://rocks/sprites/Ore5.png" id="15_65wy2"]
+[ext_resource type="Texture2D" uid="uid://dijn8s061pwfq" path="res://rocks/sprites/Ore10.png" id="16_bbr1f"]
+[ext_resource type="Texture2D" uid="uid://donrqm2eyfijl" path="res://rocks/sprites/ore13.png" id="17_wpmoa"]
+[ext_resource type="Texture2D" uid="uid://yy7eir5ughvl" path="res://rocks/sprites/ore14.png" id="18_ocfqf"]
+[ext_resource type="Texture2D" uid="uid://dln8u5advyjvm" path="res://rocks/sprites/ore21.png" id="19_omjhv"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_872ht"]
+radius = 4.0
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_p2d0s"]
 lifetime_randomness = 0.04
@@ -13,32 +33,29 @@ initial_velocity_min = 40.23
 initial_velocity_max = 160.92
 gravity = Vector3(0, 500, 0)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_872ht"]
-radius = 17.0
-
 [node name="Rock" type="Area2D"]
+z_index = 1001
 collision_mask = 2
 script = ExtResource("1_ik6fu")
+respawn_seconds = 45.0
+textures = Array[Texture2D]([ExtResource("1_mek2u"), ExtResource("3_62gsx"), ExtResource("4_qs8y8"), ExtResource("5_ycyr0"), ExtResource("6_03y87"), ExtResource("7_504wj"), ExtResource("8_5mdtl"), ExtResource("9_vvhtx"), ExtResource("10_vl7t6"), ExtResource("11_acipe"), ExtResource("12_65wy2"), ExtResource("13_vl7t6"), ExtResource("14_acipe"), ExtResource("15_65wy2"), ExtResource("16_bbr1f"), ExtResource("17_wpmoa"), ExtResource("18_ocfqf"), ExtResource("19_omjhv")])
+rock_values = Array[int]([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 3, 3, 3, 3, 3, 3])
 
 [node name="Rock1" type="Sprite2D" parent="."]
-position = Vector2(0, -7)
-scale = Vector2(1.6875, 1.5625)
+scale = Vector2(1.08, 1)
 texture = ExtResource("1_mek2u")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_872ht")
 
 [node name="DebrisParticles" type="GPUParticles2D" parent="."]
 z_index = 1000
 use_parent_material = true
-position = Vector2(-1, -7)
 emitting = false
 texture = ExtResource("2_ik6fu")
 one_shot = true
 process_material = SubResource("ParticleProcessMaterial_p2d0s")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -8)
-shape = SubResource("CircleShape2D_872ht")
-
 [node name="BreakSFX" type="AudioStreamPlayer2D" parent="."]
-position = Vector2(0, -8)
 stream = ExtResource("4_872ht")
 volume_db = -13.117

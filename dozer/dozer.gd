@@ -1,8 +1,8 @@
 extends CharacterBody2D
 
 # ---------------- Movement ----------------
-const SPEED: float = 200.0
-const JUMP_VELOCITY: float = -300.0
+const SPEED: float = 75.0
+const JUMP_VELOCITY: float = -150.0
 
 # ---------------- Anim names --------------
 @export var damage: int = 1

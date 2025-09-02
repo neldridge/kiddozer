@@ -1,11 +1,26 @@
-# RockCounterLabel.gd (on a Label node)
+# RocksLabel.gd
 extends Label
 
 func _ready() -> void:
-	# initialize text immediately
-	text = "Rocks: %d" % GameState.rocks_broken
-	# update whenever the count changes
-	GameState.rocks_broken_changed.connect(_on_rocks_broken_changed)
+	GameState.rocks_broken_changed.connect(_on_progress)
+	GameState.goal_changed.connect(_on_goal)
+	GameState.level_won.connect(_on_won)
+	# initialize immediately
+	_on_progress(GameState.rocks_broken)
+	_on_goal(GameState.max_rocks)
 
-func _on_rocks_broken_changed(count: int) -> void:
-	text = "Rocks: %d" % count
+func _on_progress(current: int) -> void:
+	if GameState.won:
+		text = "You Won!"
+	else:
+		text = "Rocks: %d / %d" % [current, GameState.max_rocks] if \
+			GameState.max_rocks > 0 else \
+			"%d" % current
+
+func _on_goal(max_rocks: int) -> void:
+	_on_progress(GameState.rocks_broken)
+
+func _on_won() -> void:
+	text = "You Won!"
+	# Optional: pause, open a win screen, or change scene
+	# get_tree().paused = true

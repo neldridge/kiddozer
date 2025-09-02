@@ -445,5 +445,6 @@ physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_3cqeh")
 
 [node name="LevelTiles" type="TileMapLayer"]
+z_index = 50
 scale = Vector2(0.457, 0.457)
 tile_set = SubResource("TileSet_2aurr")
