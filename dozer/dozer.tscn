@@ -1,0 +1,83 @@
+[gd_scene load_steps=13 format=3 uid="uid://cr06ayqsfufog"]
+
+[ext_resource type="Texture2D" uid="uid://dinunbyjyt2qu" path="res://dozer/sprites/Idle.png" id="1_f2yte"]
+[ext_resource type="Script" uid="uid://cqbb3ongekr4h" path="res://dozer/dozer.gd" id="1_qe0wl"]
+[ext_resource type="AudioStream" uid="uid://15lrx8d02qml" path="res://dozer/sounds/bulldozer_idle.mp3" id="3_53llr"]
+[ext_resource type="AudioStream" uid="uid://ckglk4r6yea6a" path="res://dozer/sounds/bulldozer_moving.mp3" id="4_2ggiw"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qe0wl"]
+atlas = ExtResource("1_f2yte")
+region = Rect2(36, 32, 41, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_53llr"]
+atlas = ExtResource("1_f2yte")
+region = Rect2(148, 32, 41, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2ggiw"]
+atlas = ExtResource("1_f2yte")
+region = Rect2(260, 32, 41, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_laxjm"]
+atlas = ExtResource("1_f2yte")
+region = Rect2(372, 32, 41, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slkv6"]
+atlas = ExtResource("1_f2yte")
+region = Rect2(484, 32, 41, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f8ko1"]
+atlas = ExtResource("1_f2yte")
+region = Rect2(596, 32, 41, 35)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_a6j0l"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qe0wl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_53llr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2ggiw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_laxjm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slkv6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f8ko1")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f2yte"]
+size = Vector2(36, 23)
+
+[node name="Dozer" type="CharacterBody2D" groups=["damager"]]
+z_index = 100
+collision_layer = 2
+script = ExtResource("1_qe0wl")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(19.5018, -17.0625)
+scale = Vector2(0.910714, 0.910714)
+sprite_frames = SubResource("SpriteFrames_a6j0l")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.37713
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(19, -16.5)
+shape = SubResource("RectangleShape2D_f2yte")
+
+[node name="IdleSound" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(19, -16.5)
+stream = ExtResource("3_53llr")
+
+[node name="MovingSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_2ggiw")
