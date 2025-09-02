@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="KidDozer"
-run/main_scene="uid://cwq5cov2yftis"
+run/main_scene="uid://djns7471v73uy"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 

@@ -7,7 +7,7 @@ func _ready() -> void:
 	GameState.level_won.connect(_on_won)
 	# initialize immediately
 	_on_progress(GameState.rocks_broken)
-	_on_goal(GameState.max_rocks)
+	_on_goal()
 
 func _on_progress(current: int) -> void:
 	if GameState.won:
@@ -17,7 +17,7 @@ func _on_progress(current: int) -> void:
 			GameState.max_rocks > 0 else \
 			"%d" % current
 
-func _on_goal(max_rocks: int) -> void:
+func _on_goal() -> void:
 	_on_progress(GameState.rocks_broken)
 
 func _on_won() -> void:

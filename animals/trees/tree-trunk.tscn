@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://3si3uieqf2xj"]
+
+[ext_resource type="Texture2D" uid="uid://bjbijblpu51ua" path="res://animals/trees/tree-trunk.png" id="1_wckw6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yt5ho"]
+size = Vector2(4, 9)
+
+[node name="TreeTrunk" type="Area2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -4)
+texture = ExtResource("1_wckw6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -4.5)
+shape = SubResource("RectangleShape2D_yt5ho")

@@ -4,7 +4,7 @@ extends Area2D
 @export var debris_scene: PackedScene        # optional: pre-made debris scene
 @export var loot_scene: PackedScene          # optional: coins/resources to drop
 @export var flash_time: float = 0.08         # hit flash duration (seconds)
-@export var respawn_seconds: float = 20.0    # how long before the rock comes back
+#@export var respawn_seconds: float = 20.0    # how long before the rock comes back
 @export var rock_value: int = 1
 
 # --- VARIANTS / RANDOMIZATION ---
@@ -12,7 +12,7 @@ extends Area2D
 @export var rock_values: Array[int] = []
 @export var use_random_variant: bool = true
 @export var variant_index: int = -1          # -1 = auto/random (if enabled)
-@export var repick_on_respawn: bool = true   # pick a new art on respawn
+#@export var repick_on_respawn: bool = true   # pick a new art on respawn
 
 # subtle per-instance variety (all optional)
 @export var random_flip_h: bool = true
@@ -96,34 +96,34 @@ func _break_apart(attacker: Node) -> void:
 	GameState.add_rock_broken(_rock_value)
 
 	# schedule respawn (do NOT queue_free the rock)
-	_async_respawn(respawn_seconds)
+	#_async_respawn(respawn_seconds)
 
-func _async_respawn(seconds: float) -> void:
-	var t := get_tree().create_timer(seconds)
-	await t.timeout
-	if !is_inside_tree():
-		return
-	_respawn()
-
-func _respawn() -> void:
-	_hp = max_hp
-	_is_broken = false
-
-	# (optional) pick a new look on respawn
-	if repick_on_respawn:
-		_apply_variant(_pick_variant_index())
-
-	# show again
-	if _sprite:
-		_sprite.visible = true
-
-	# re-enable collision safely
-	if _col:
-		_col.set_deferred("disabled", false)
-
-	# reset/stop particles so they don't keep emitting
-	if _particles:
-		_particles.emitting = false
+#func _async_respawn(seconds: float) -> void:
+	#var t := get_tree().create_timer(seconds)
+	#await t.timeout
+	#if !is_inside_tree():
+		#return
+	#_respawn()
+#
+#func _respawn() -> void:
+	#_hp = max_hp
+	#_is_broken = false
+#
+	## (optional) pick a new look on respawn
+	#if repick_on_respawn:
+		#_apply_variant(_pick_variant_index())
+#
+	## show again
+	#if _sprite:
+		#_sprite.visible = true
+#
+	## re-enable collision safely
+	#if _col:
+		#_col.set_deferred("disabled", false)
+#
+	## reset/stop particles so they don't keep emitting
+	#if _particles:
+		#_particles.emitting = false
 
 # --- Variant helpers ---
 
@@ -146,9 +146,7 @@ func _apply_variant(i: int) -> void:
 		_rock_value = rock_values[i]
 
 	# Add the rock value to the max for the level
-	var _curr_max_rocks: int = GameState.max_rocks
-	var _new_max_rocks: int = _curr_max_rocks + _rock_value
-	GameState.reset_for_level(_new_max_rocks)
+	GameState.add_max_rocks(_rock_value)
 
 
 func _apply_small_random_variation() -> void:

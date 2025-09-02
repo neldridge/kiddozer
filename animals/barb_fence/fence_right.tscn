@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://gmbq5ruorv72"]
+
+[ext_resource type="Texture2D" uid="uid://dar404rtnqx6g" path="res://animals/barb_fence/fence-right.png" id="1_ohwvl"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dm2mc"]
+size = Vector2(26, 10)
+
+[node name="fence-left" type="Area2D"]
+z_index = 100
+collision_layer = 4
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_ohwvl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-3, 0)
+shape = SubResource("RectangleShape2D_dm2mc")

@@ -254,10 +254,10 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_f2yte"]
-size = Vector2(24, 21.75)
+size = Vector2(28, 21.75)
 
 [node name="Dozer" type="CharacterBody2D" groups=["damager"]]
-z_index = 100
+z_index = 1000
 collision_layer = 2
 script = ExtResource("1_qe0wl")
 
@@ -274,7 +274,7 @@ frame_progress = 0.829065
 flip_h = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-14, -10.125)
+position = Vector2(-12, -10.125)
 shape = SubResource("RectangleShape2D_f2yte")
 
 [node name="IdleSound" type="AudioStreamPlayer2D" parent="."]

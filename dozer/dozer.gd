@@ -280,8 +280,8 @@ func _force_sync_visuals_to_floor() -> void:
 
 	var desired_rot: float = 0.0
 	if normal != Vector2.ZERO:
-		var tan: Vector2 = Vector2(-normal.y, normal.x).normalized()
-		var sr: float = atan2(tan.y, tan.x)
+		var tang: Vector2 = Vector2(-normal.y, normal.x).normalized()
+		var sr: float = atan2(tang.y, tang.x)
 		var cr: float = clamp(sr, -PI * 0.5, PI * 0.5)
 		var maxr: float = deg_to_rad(slope_tilt_max_deg)
 		desired_rot = clamp(cr, -maxr, maxr)

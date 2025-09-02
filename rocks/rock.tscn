@@ -37,7 +37,6 @@ gravity = Vector3(0, 500, 0)
 z_index = 1001
 collision_mask = 2
 script = ExtResource("1_ik6fu")
-respawn_seconds = 45.0
 textures = Array[Texture2D]([ExtResource("1_mek2u"), ExtResource("3_62gsx"), ExtResource("4_qs8y8"), ExtResource("5_ycyr0"), ExtResource("6_03y87"), ExtResource("7_504wj"), ExtResource("8_5mdtl"), ExtResource("9_vvhtx"), ExtResource("10_vl7t6"), ExtResource("11_acipe"), ExtResource("12_65wy2"), ExtResource("13_vl7t6"), ExtResource("14_acipe"), ExtResource("15_65wy2"), ExtResource("16_bbr1f"), ExtResource("17_wpmoa"), ExtResource("18_ocfqf"), ExtResource("19_omjhv")])
 rock_values = Array[int]([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 3, 3, 3, 3, 3, 3])
 
@@ -53,6 +52,7 @@ z_index = 1000
 use_parent_material = true
 emitting = false
 texture = ExtResource("2_ik6fu")
+lifetime = 0.25
 one_shot = true
 process_material = SubResource("ParticleProcessMaterial_p2d0s")
 
