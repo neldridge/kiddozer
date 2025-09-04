@@ -1,7 +1,7 @@
-[gd_scene load_steps=26 format=3 uid="uid://c2t2h1ow7gjfm"]
+[gd_scene load_steps=22 format=3 uid="uid://c2t2h1ow7gjfm"]
 
 [ext_resource type="Texture2D" uid="uid://bk8g4fphwgblh" path="res://animals/cow/cow.png" id="1_ycoc1"]
-[ext_resource type="Texture2D" uid="uid://b32a6adbqyd1s" path="res://animals/cow/cow_idle.png" id="2_at1p3"]
+[ext_resource type="Texture2D" uid="uid://dj1xvd8tdptc8" path="res://cow.png" id="2_at1p3"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_at1p3"]
 atlas = ExtResource("1_ycoc1")
@@ -69,23 +69,7 @@ region = Rect2(96, 96, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ekkra"]
 atlas = ExtResource("2_at1p3")
-region = Rect2(0, 0, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_t16il"]
-atlas = ExtResource("2_at1p3")
-region = Rect2(0, 32, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_vt5eu"]
-atlas = ExtResource("2_at1p3")
-region = Rect2(0, 64, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ruip2"]
-atlas = ExtResource("2_at1p3")
-region = Rect2(0, 96, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ixi78"]
-atlas = ExtResource("2_at1p3")
-region = Rect2(0, 128, 32, 32)
+region = Rect2(0, 0, 48, 48)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ekkra"]
 animations = [{
@@ -145,18 +129,6 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ekkra")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_t16il")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_vt5eu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ruip2")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ixi78")
 }],
 "loop": true,
 "name": &"idle",
@@ -164,17 +136,18 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t16il"]
-size = Vector2(17, 10)
+size = Vector2(25.5, 21)
 
 [node name="Cow" type="Area2D"]
 collision_layer = 4
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(2, -10)
 sprite_frames = SubResource("SpriteFrames_ekkra")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.654962
+frame_progress = 0.292257
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-0.5, 0)
+position = Vector2(-2.75, -10.5)
 shape = SubResource("RectangleShape2D_t16il")

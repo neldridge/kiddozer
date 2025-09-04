@@ -3,12 +3,10 @@ extends CharacterBody2D
 # ---------------- Movement ----------------
 const SPEED: float = 75.0
 const JUMP_VELOCITY: float = -150.0
+const FLOOR_SNAP := 6.0
 
 # ---------------- Anim names --------------
-@export var damage: int = 1
-@export var attack_anim: StringName = &"attack"
-@export var run_anim: StringName = &"walk"      # primary run name
-@export var run_fallback_anim: StringName = &"hit"  # <- will be used if 'run' doesn't exist
+@export var run_anim: StringName = &"walk"
 @export var idle_anim: StringName = &"idle"
 @export var jump_anim: StringName = &"jump"
 @export var fall_anim: StringName = &"fall"
@@ -20,304 +18,216 @@ const JUMP_VELOCITY: float = -150.0
 @export var slope_constant_speed: bool = true
 @export var floor_stop_on_slope_when_idle: bool = true
 
-# ------------- Visual slope tilt ----------
+# ------------- Tilt (rotation) ------------
 @export var enable_slope_tilt: bool = true
 @export_range(0.0, 89.0, 0.1) var slope_tilt_max_deg: float = 45.0
 @export_range(0.0, 30.0, 0.1) var slope_tilt_min_deg: float = 3.0
-
-# Keep pivot glued to contact (no hover)
-@export var pivot_follow_contact: bool = true
-@export_range(0.0, 12.0, 0.1) var pivot_up_bias_px: float = 2.0   # keep ABOVE floor by this much
-
-# Smoothing / jitter control
-@export var tilt_deadzone_deg: float = 0.8
-@export var quantize_angle_step_deg: float = 0.25  # 0 = off
-@export var normal_alpha: float = 14.0             # bigger = snappier
-@export var contact_alpha: float = 18.0
+@export var normal_alpha: float = 14.0
 @export var rot_alpha: float = 12.0
-@export var pivot_alpha: float = 16.0
+@export var tilt_deadzone_deg: float = 0.8
+@export var quantize_angle_step_deg: float = 0.25
 
-# Landing snap: fully sync visuals on landing to avoid “snap forward” after long falls
-@export var landing_snap_time: float = 0.06  # seconds to hold exact sync right after landing
+# ---------- Visuals (bottom-pivot) --------
+@export var pivot_follow_contact_x: bool = false
+@export_range(0.0, 4.0, 0.1) var pivot_up_bias_px: float = 0.0
+@export var follow_ground_y: bool = true
+@export_range(16.0, 256.0, 1.0) var ray_up: float = 64.0
+@export_range(64.0, 512.0, 1.0) var ray_down: float = 256.0
+@export var sprite_bottom_to_tire_px: float = 31.0
 
-# Hard penetration guard (ray solve)
-@export var penetration_guard_distance: float = 24.0
-@export var penetration_guard_extra_down: float = 10.0
+# --- New: when to follow ground (visuals) ---
+@export var follow_ground_when_falling: bool = true     # follow while descending
+@export var follow_ground_only_when_close_px: float = 12.0  # only snap if ground is near
 
-# Your ground is on layer 1
+# ---------- Ground mask for raycasts -------
 @export var floor_collision_mask: int = 1
 
-# Stable source for floor info
-@export var slope_raycast_path: NodePath = ^"FloorRay"
+# ---------- Probes (for tilt) --------------
+@export var slope_raycast_front_path: NodePath = ^"RayFront"
+@export var slope_raycast_mid_path:   NodePath = ^"FloorRay"
+@export var slope_raycast_back_path:  NodePath = ^"RayBack"
 
-# ------------- Nodes ----------------------
+# ------------- Nodes -----------------------
 @onready var visual_pivot: Node2D = $VisualPivot
 @onready var animated_sprite_2d: AnimatedSprite2D = $VisualPivot/AnimatedSprite2D
 @onready var collider: CollisionShape2D = $CollisionShape2D
+@onready var _ray_front: RayCast2D = get_node_or_null(slope_raycast_front_path)
+@onready var _ray_mid:   RayCast2D = get_node_or_null(slope_raycast_mid_path)
+@onready var _ray_back:  RayCast2D = get_node_or_null(slope_raycast_back_path)
 @onready var idle_sound: AudioStreamPlayer2D = $IdleSound
 @onready var moving_sound: AudioStreamPlayer2D = $MovingSound
-@onready var _ray: RayCast2D = get_node_or_null(slope_raycast_path) if slope_raycast_path != ^"" else null
-@onready var _attack_timer: Timer = Timer.new()
 
-# Debug
-@export var debug_draw: bool = false
-@export var debug_len: float = 20.0
+# ------------- Debug -----------------------
+@export var debug_draw: bool = true
+@export var debug_len: float = 24.0
 
-var _attack_locked: bool = false
+# ------------- Smoothed rotation -----------
+var _n_s: Vector2 = Vector2.UP
+var _rot_s: float = 0.0
 
-# Smoothed state
-var _n_s: Vector2 = Vector2.UP          # smoothed floor normal
-var _c_s: Vector2 = Vector2.ZERO        # smoothed contact (GLOBAL)
-var _rot_s: float = 0.0                 # smoothed rotation target (radians)
-var _pos_s: Vector2 = Vector2.ZERO      # smoothed pivot target (LOCAL)
-
-# Landing detection
-var _was_on_floor: bool = false
-var _landing_timer: float = 0.0
-
+# -------------------------------------------
 func _ready() -> void:
+	# Physics slope params
 	floor_snap_length = slope_snap_length
 	floor_max_angle = deg_to_rad(slope_max_angle_deg)
 	max_slides = slope_max_slides
 	floor_constant_speed = slope_constant_speed
 	floor_stop_on_slope = floor_stop_on_slope_when_idle
-	if _ray: _ray.enabled = true
+	# Enable snapping by default
+	floor_snap_length = FLOOR_SNAP
 
-	if not is_in_group("damager"):
-		add_to_group("damager")
-	if animated_sprite_2d and not animated_sprite_2d.is_connected("animation_finished", _on_anim_finished):
-		animated_sprite_2d.animation_finished.connect(_on_anim_finished)
+	# Visuals: pivot at origin; art bottom aligned to tire line (y=0)
+	visual_pivot.position = Vector2.ZERO
+	visual_pivot.rotation = 0.0
 
-	_attack_timer.one_shot = true
-	add_child(_attack_timer)
-	_attack_timer.timeout.connect(_on_attack_lock_timeout)
+	if animated_sprite_2d:
+		animated_sprite_2d.centered = false
+		var frames: SpriteFrames = animated_sprite_2d.sprite_frames
+		if frames and frames.get_animation_names().size() > 0:
+			var anim: StringName = frames.get_animation_names()[0]
+			var tex: Texture2D = frames.get_frame_texture(anim, 0)
+			if tex:
+				var sz: Vector2 = tex.get_size()
+				animated_sprite_2d.offset = Vector2(-sz.x * 0.5, -sz.y + sprite_bottom_to_tire_px)
 
-	_rot_s = visual_pivot.rotation
-	_pos_s = visual_pivot.position
-	_c_s = to_global(_pos_s)
-	_was_on_floor = is_on_floor()
+	_snap_collider_bottom_to_y0()
 
-# ----------------- INPUT HOOK for attack (plays in air too) -------------------
-# Call this from your hit/click/weapon event. It will play even while falling.
-func play_on_hit(_target: Node) -> void:
-	_play_attack()
+	if _ray_front: _ray_front.enabled = true; _ray_front.position.y = 0.0
+	if _ray_mid:   _ray_mid.enabled = true;   _ray_mid.position.y = 0.0
+	if _ray_back:  _ray_back.enabled = true;  _ray_back.position.y = 0.0
 
-func _play_attack() -> void:
-	if not animated_sprite_2d or not animated_sprite_2d.sprite_frames:
-		return
-	if not animated_sprite_2d.sprite_frames.has_animation(attack_anim):
-		return
-	_attack_locked = true
-	animated_sprite_2d.play(attack_anim)
-	animated_sprite_2d.frame = 0
-	animated_sprite_2d.frame_progress = 0.0
-	_attack_timer.start(_attack_duration())
+	if idle_sound: idle_sound.stream_paused = false
+	if moving_sound: moving_sound.stream_paused = false
 
-func _on_anim_finished() -> void:
-	# Only unlock when the attack actually finishes
-	if animated_sprite_2d and animated_sprite_2d.animation == String(attack_anim):
-		_attack_locked = false
-
-func _on_attack_lock_timeout() -> void:
-	# Safety: if the attack is still playing, extend lock briefly
-	if _is_attack_anim_playing():
-		_attack_timer.start(0.05)
-	else:
-		_attack_locked = false
-
-func _is_attack_anim_playing() -> bool:
-	return animated_sprite_2d \
-		and animated_sprite_2d.animation == String(attack_anim) \
-		and animated_sprite_2d.is_playing()
-
-# ------------------------------- PHYSICS --------------------------------------
+# -------------------------------------------
 func _physics_process(delta: float) -> void:
+	# Gravity
 	if not is_on_floor():
 		velocity += get_gravity() * delta
+
+	# Jump: turn off snapping right away
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+		floor_snap_length = 0.0
 		velocity.y = JUMP_VELOCITY
 
-	var direction: float = Input.get_axis("ui_left", "ui_right")
-	if direction != 0.0:
-		velocity.x = direction * SPEED
-		animated_sprite_2d.flip_h = direction > 0.0
+	# Horizontal
+	var dir: float = Input.get_axis("ui_left", "ui_right")
+	if dir != 0.0:
+		velocity.x = dir * SPEED
+		if animated_sprite_2d:
+			animated_sprite_2d.flip_h = dir > 0.0
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, SPEED)
 
+	# Restore snapping when falling or grounded
+	if is_on_floor() or velocity.y > 0.0:
+		floor_snap_length = FLOOR_SNAP
+
 	move_and_slide()
 
-	# Landing detection & immediate sync
-	var now_on_floor: bool = is_on_floor()
-	var just_landed: bool = (not _was_on_floor) and now_on_floor
-	if just_landed:
-		_force_sync_visuals_to_floor()
-		_landing_timer = landing_snap_time
-
-	_update_tilt_and_pivot(delta)
-
-	# During the landing snap window, keep visuals locked to the current targets (no lag)
-	if _landing_timer > 0.0:
-		_landing_timer -= delta
-		visual_pivot.rotation = _rot_s
-		visual_pivot.position = _pos_s
-
-	_was_on_floor = now_on_floor
-
-	# ---------------- Animation state machine ----------------
-	# If an attack is playing (ground or air), don't override it.
-	if _is_attack_anim_playing():
-		_attack_locked = true
+	# Tilt: only while grounded/falling; not while rising
+	if _should_follow_ground() and enable_slope_tilt:
+		_update_tilt(delta)
 	else:
-		# If we previously locked (e.g., cross-frame), keep it until timeout unlocks.
-		if not _attack_locked:
-			_play_locomotion_anim(direction, now_on_floor)
+		# relax to flat in air / rising
+		_rot_s = lerp_angle(_rot_s, 0.0, clamp(rot_alpha * delta, 0.0, 1.0))
+	visual_pivot.rotation = _rot_s
 
-	# Sounds (unchanged)
-	var moving: bool = absf(direction) > 0.0
-	if now_on_floor:
-		if moving:
-			if not moving_sound.playing: moving_sound.play()
-			if idle_sound.playing: idle_sound.stop()
+	# ---- Visual ground-follow (the previous "glue to ground") ----
+	var local_x: float = (visual_pivot.position.x if pivot_follow_contact_x else 0.0)
+	if follow_ground_y and _should_follow_ground():
+		var gp: Vector2 = to_global(visual_pivot.position)
+		var start_y := gp.y - ray_up
+		var end_y := gp.y + ray_down
+		var hit: Dictionary = _raycast_vertical(gp.x, start_y, end_y)
+		if not hit.is_empty():
+			var ground_y: float = (hit["position"] as Vector2).y
+			var desired_global: Vector2 = Vector2(gp.x, ground_y + pivot_up_bias_px)
+			var desired_local: Vector2 = to_local(desired_global)
+			desired_local.x = local_x
+			# Only snap if the ground is close (prevents yanking down during jumps)
+			if absf(desired_local.y - visual_pivot.position.y) <= follow_ground_only_when_close_px:
+				visual_pivot.position.y = lerp(visual_pivot.position.y, desired_local.y, 0.35)
+	# Always lock X
+	visual_pivot.position.x = local_x
+
+	# ---- Anim state ----
+	if animated_sprite_2d and animated_sprite_2d.sprite_frames:
+		if not is_on_floor():
+			if velocity.y < 0.0 and animated_sprite_2d.sprite_frames.has_animation(jump_anim):
+				animated_sprite_2d.play(jump_anim)
+			elif animated_sprite_2d.sprite_frames.has_animation(fall_anim):
+				animated_sprite_2d.play(fall_anim)
 		else:
-			if not idle_sound.playing: idle_sound.play()
-			if moving_sound.playing: moving_sound.stop()
+			if absf(dir) > 0.0 and animated_sprite_2d.sprite_frames.has_animation(run_anim):
+				animated_sprite_2d.play(run_anim)
+			elif animated_sprite_2d.sprite_frames.has_animation(idle_anim):
+				animated_sprite_2d.play(idle_anim)
+
+	# ---- Sounds ----
+	var moving := absf(dir) > 0.0
+	if is_on_floor():
+		if moving:
+			if moving_sound and not moving_sound.playing: moving_sound.play()
+			if idle_sound and idle_sound.playing: idle_sound.stop()
+		else:
+			if idle_sound and not idle_sound.playing: idle_sound.play()
+			if moving_sound and moving_sound.playing: moving_sound.stop()
 	else:
-		if not moving_sound.playing: moving_sound.play()
-		if idle_sound.playing: idle_sound.stop()
+		if moving_sound and not moving_sound.playing: moving_sound.play()
+		if idle_sound and idle_sound.playing: idle_sound.stop()
 
 	if debug_draw:
 		queue_redraw()
 
-# ---------------- Tilt + Pivot follow + Hard clamp ----------------
-func _update_tilt_and_pivot(delta: float) -> void:
-	if not enable_slope_tilt:
-		_rot_s = lerp_angle(_rot_s, 0.0, clamp(rot_alpha * delta, 0.0, 1.0))
-		return
+# --------- Should visuals/tilt follow ground? ----------
+func _should_follow_ground() -> bool:
+	# True when on floor, or (optionally) while descending.
+	return is_on_floor() or (follow_ground_when_falling and velocity.y > 0.0)
 
-	var have_floor: bool = is_on_floor()
+# --------- Tilt helpers ----------
+func _update_tilt(delta: float) -> void:
+	var chosen: RayCast2D = _best_ray()
 	var normal_new: Vector2 = Vector2.ZERO
-	var contact_new_global: Vector2 = Vector2.ZERO
-	var have_contact: bool = false
-
-	if have_floor and _ray and _ray.is_colliding():
-		normal_new = _ray.get_collision_normal()
-		contact_new_global = _ray.get_collision_point()
-		have_contact = true
-	elif have_floor:
+	if chosen and chosen.is_colliding():
+		normal_new = chosen.get_collision_normal()
+	else:
 		normal_new = get_floor_normal()
-		var count: int = get_slide_collision_count()
-		for i in count:
-			var col := get_slide_collision(i)
-			if col and col.get_normal().dot(Vector2.UP) > 0.1:
-				contact_new_global = col.get_position()
-				have_contact = true
-				break
-
-	# Smooth normal
 	if normal_new != Vector2.ZERO:
-		var t_n: float = clamp(normal_alpha * delta, 0.0, 1.0)
-		_n_s = (_n_s * (1.0 - t_n) + normal_new * t_n).normalized()
+		_n_s = (_n_s.lerp(normal_new, clamp(normal_alpha * delta, 0.0, 1.0))).normalized()
 
-	# Desired rotation
 	var desired_rot: float = 0.0
-	if have_floor and _n_s != Vector2.ZERO:
+	if _n_s != Vector2.ZERO:
 		var tangent: Vector2 = Vector2(-_n_s.y, _n_s.x).normalized()
 		var slope_rad: float = atan2(tangent.y, tangent.x)
-		var clamped_rad: float = clamp(slope_rad, -PI * 0.5, PI * 0.5)
-		var slope_deg: float = absf(rad_to_deg(clamped_rad))
-		if slope_deg >= slope_tilt_min_deg:
-			var max_rad: float = deg_to_rad(slope_tilt_max_deg)
-			desired_rot = clamp(clamped_rad, -max_rad, max_rad)
-
-	# Deadzone / quantize
+		if absf(rad_to_deg(slope_rad)) >= slope_tilt_min_deg:
+			desired_rot = clamp(slope_rad, -deg_to_rad(slope_tilt_max_deg), deg_to_rad(slope_tilt_max_deg))
 	var dz: float = deg_to_rad(tilt_deadzone_deg)
 	if _angle_dist(_rot_s, desired_rot) < dz:
 		desired_rot = _rot_s
 	if quantize_angle_step_deg > 0.0:
 		var step: float = deg_to_rad(quantize_angle_step_deg)
 		desired_rot = round(desired_rot / step) * step
+	_rot_s = lerp_angle(_rot_s, desired_rot, clamp(rot_alpha * delta, 0.0, 1.0))
 
-	# Smooth rotation target
-	var t_rot: float = clamp(rot_alpha * delta, 0.0, 1.0)
-	_rot_s = lerp_angle(_rot_s, desired_rot, t_rot)
+func _best_ray() -> RayCast2D:
+	if velocity.x > 0.0 and _ray_front and _ray_front.is_colliding(): return _ray_front
+	if velocity.x < 0.0 and _ray_back  and _ray_back.is_colliding():  return _ray_back
+	if _ray_mid and _ray_mid.is_colliding(): return _ray_mid
+	if _ray_front and _ray_front.is_colliding(): return _ray_front
+	if _ray_back  and _ray_back.is_colliding():  return _ray_back
+	return _ray_mid
 
-	# ----- Pivot follow -----
-	if pivot_follow_contact and have_floor and have_contact:
-		# Smooth contact (GLOBAL)
-		var t_c: float = clamp(contact_alpha * delta, 0.0, 1.0)
-		_c_s = _c_s.lerp(contact_new_global, t_c)
+func _angle_dist(a: float, b: float) -> float:
+	return absf(atan2(sin(b - a), cos(b - a)))
 
-		# Target ABOVE floor along normal
-		var bias_px: float = max(0.0, pivot_up_bias_px)
-		var desired_global: Vector2 = _c_s + _n_s * bias_px
-		desired_global = _resolve_pivot_against_world(desired_global, _n_s, penetration_guard_distance, penetration_guard_extra_down)
-
-		# Smooth pivot target in LOCAL space
-		var desired_local: Vector2 = to_local(desired_global)
-		var t_pos: float = clamp(pivot_alpha * delta, 0.0, 1.0)
-		_pos_s = _pos_s.lerp(desired_local, t_pos)
-
-	# Apply smoothed targets (landing snap may overwrite right after)
-	visual_pivot.rotation = _rot_s
-	visual_pivot.position = _pos_s
-
-# ---- LANDING SNAP: hard-sync visuals & state on first contact ----------------
-func _force_sync_visuals_to_floor() -> void:
-	var normal: Vector2 = Vector2.UP
-	var contact_g: Vector2 = to_global(visual_pivot.position)
-	if _ray and _ray.is_colliding():
-		normal = _ray.get_collision_normal()
-		contact_g = _ray.get_collision_point()
-	else:
-		if get_floor_normal() != Vector2.ZERO:
-			normal = get_floor_normal()
-		var count: int = get_slide_collision_count()
-		for i in count:
-			var col := get_slide_collision(i)
-			if col and col.get_normal().dot(Vector2.UP) > 0.1:
-				contact_g = col.get_position()
-				break
-
-	var desired_rot: float = 0.0
-	if normal != Vector2.ZERO:
-		var tang: Vector2 = Vector2(-normal.y, normal.x).normalized()
-		var sr: float = atan2(tang.y, tang.x)
-		var cr: float = clamp(sr, -PI * 0.5, PI * 0.5)
-		var maxr: float = deg_to_rad(slope_tilt_max_deg)
-		desired_rot = clamp(cr, -maxr, maxr)
-
-	var desired_global: Vector2 = contact_g + normal.normalized() * max(0.0, pivot_up_bias_px)
-	desired_global = _resolve_pivot_against_world(desired_global, normal, penetration_guard_distance, penetration_guard_extra_down)
-	var desired_local: Vector2 = to_local(desired_global)
-
-	visual_pivot.rotation = desired_rot
-	visual_pivot.position = desired_local
-
-	_n_s = normal
-	_c_s = contact_g
-	_rot_s = desired_rot
-	_pos_s = desired_local
-
-# World resolve with mask + excludes
-func _resolve_pivot_against_world(target_global: Vector2, floor_normal: Vector2, depth: float, extra_down: float) -> Vector2:
+# --------- Ground Y probe ----------
+func _raycast_vertical(global_x: float, start_y: float, end_y: float) -> Dictionary:
 	var space := get_world_2d().direct_space_state
-	var excludes: Array = _gather_exclude_rids()
-
-	var p1 := PhysicsRayQueryParameters2D.create(target_global, target_global - floor_normal.normalized() * depth)
-	p1.exclude = excludes
-	p1.collision_mask = floor_collision_mask
-	var hit1 := space.intersect_ray(p1)
-	if hit1:
-		return hit1.position + hit1.normal * pivot_up_bias_px
-
-	var p2 := PhysicsRayQueryParameters2D.create(target_global, target_global + Vector2.DOWN * extra_down)
-	p2.exclude = excludes
-	p2.collision_mask = floor_collision_mask
-	var hit2 := space.intersect_ray(p2)
-	if hit2:
-		return hit2.position + hit2.normal * pivot_up_bias_px
-
-	return target_global
+	var p := PhysicsRayQueryParameters2D.create(Vector2(global_x, start_y), Vector2(global_x, end_y))
+	p.collision_mask = floor_collision_mask
+	p.exclude = _gather_exclude_rids()
+	return space.intersect_ray(p)
 
 func _gather_exclude_rids() -> Array:
 	var arr: Array = [get_rid()]
@@ -328,62 +238,34 @@ func _gather_exclude_rids() -> Array:
 				if cc is CollisionObject2D: arr.append((cc as CollisionObject2D).get_rid())
 	return arr
 
-func _angle_dist(a: float, b: float) -> float:
-	return absf(atan2(sin(b - a), cos(b - a)))
-
-# ---------------- Attack / anim helpers ---------------
-func _attack_duration() -> float:
-	if not animated_sprite_2d or not animated_sprite_2d.sprite_frames: return 0.1
-	var frames: int = animated_sprite_2d.sprite_frames.get_frame_count(attack_anim)
-	var fps: float = animated_sprite_2d.sprite_frames.get_animation_speed(attack_anim)
-	if fps <= 0.0: fps = 10.0
-	return max(0.05, float(frames) / fps)
-
-func _play_locomotion_anim(direction: float, on_floor: bool) -> void:
-	if not animated_sprite_2d or not animated_sprite_2d.sprite_frames:
+# --------- Collider bottom = y0 ----------
+func _snap_collider_bottom_to_y0() -> void:
+	if not (is_instance_valid(collider) and is_instance_valid(collider.shape)):
 		return
+	if collider.shape is RectangleShape2D:
+		var r := collider.shape as RectangleShape2D
+		collider.position.y = -r.size.y * 0.5
+	elif collider.shape is CircleShape2D:
+		var c := collider.shape as CircleShape2D
+		collider.position.y = -c.radius
+	elif collider.shape is CapsuleShape2D:
+		var cap := collider.shape as CapsuleShape2D
+		collider.position.y = -(cap.height * 0.5 + cap.radius)
 
-	# Air states
-	if not on_floor:
-		if velocity.y < 0.0 and animated_sprite_2d.sprite_frames.has_animation(jump_anim):
-			_safe_play(jump_anim); return
-		if velocity.y >= 0.0 and animated_sprite_2d.sprite_frames.has_animation(fall_anim):
-			_safe_play(fall_anim); return
-		# If you prefer to keep "moving" in air when running horizontally, uncomment:
-		# if absf(direction) > 0.0: _safe_play(_pick_run_anim()); return
-
-	# Grounded states
-	if absf(direction) > 0.0:
-		_safe_play(_pick_run_anim())
-	else:
-		if animated_sprite_2d.sprite_frames.has_animation(idle_anim):
-			_safe_play(idle_anim)
-
-func _pick_run_anim() -> StringName:
-	# Use 'run' if present, otherwise fall back to 'moving'
-	if animated_sprite_2d.sprite_frames.has_animation(run_anim):
-		return run_anim
-	if run_fallback_anim != StringName() and animated_sprite_2d.sprite_frames.has_animation(run_fallback_anim):
-		return run_fallback_anim
-	# If neither exists, stick with idle to avoid errors
-	return idle_anim
-
-func _safe_play(anim: StringName) -> void:
-	# Do NOT override if an attack is actively playing
-	if _is_attack_anim_playing():
-		return
-	if animated_sprite_2d.animation != String(anim) or not animated_sprite_2d.is_playing():
-		animated_sprite_2d.play(anim)
-
-# ---------------- Debug gizmos (optional) ---------------
+# ------------- Debug draw -----------------
 func _draw() -> void:
 	if not debug_draw: return
-	var p: Vector2 = visual_pivot.position
-	draw_circle(p, 3.0, Color(1, 0, 0))
-	draw_line(p, p + Vector2.RIGHT.rotated(visual_pivot.rotation) * debug_len, Color(1, 0, 0), 2.0)
-	if _ray and _ray.is_colliding():
-		var gp: Vector2 = _ray.get_collision_point()
-		var lp: Vector2 = to_local(gp)
-		draw_circle(lp, 3.0, Color(0.2, 0.6, 1.0))
-		var n: Vector2 = _ray.get_collision_normal()
-		draw_line(lp, lp + n * debug_len, Color(0.2, 0.6, 1.0), 1.0)
+	draw_line(Vector2(-800, 0), Vector2(800, 0), Color(1,0,0), 2.0) # tire line
+	if collider and collider.shape:
+		var y_bottom := 0.0
+		if collider.shape is RectangleShape2D:
+			var r := collider.shape as RectangleShape2D
+			y_bottom = collider.position.y + r.size.y * 0.5
+		elif collider.shape is CircleShape2D:
+			var c := collider.shape as CircleShape2D
+			y_bottom = collider.position.y + c.radius
+		elif collider.shape is CapsuleShape2D:
+			var cap := collider.shape as CapsuleShape2D
+			y_bottom = collider.position.y + (cap.height * 0.5 + cap.radius)
+		draw_line(Vector2(-800, y_bottom), Vector2(800, y_bottom), Color(0,1,0), 2.0)
+	draw_circle(visual_pivot.position, 3.0, Color(0.2,0.6,1.0)) # visual pivot

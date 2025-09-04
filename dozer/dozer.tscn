@@ -1,64 +1,37 @@
-[gd_scene load_steps=22 format=3 uid="uid://cr06ayqsfufog"]
+[gd_scene load_steps=13 format=3 uid="uid://cr06ayqsfufog"]
 
 [ext_resource type="Script" uid="uid://cqbb3ongekr4h" path="res://dozer/dozer.gd" id="1_qe0wl"]
-[ext_resource type="Texture2D" uid="uid://e5c511glgkln" path="res://dozer/rubble_truck.png" id="2_fbc6f"]
-[ext_resource type="Texture2D" uid="uid://crqvhks28ytrl" path="res://dozer/sprites/Death.png" id="3_0dsod"]
+[ext_resource type="Texture2D" uid="uid://p2tsjdvdal1p" path="res://rubble_moving.png" id="2_c4xwp"]
+[ext_resource type="Texture2D" uid="uid://ebshxo2e7pcv" path="res://rubble.png" id="2_jhbuo"]
 [ext_resource type="AudioStream" uid="uid://15lrx8d02qml" path="res://dozer/sounds/bulldozer_idle.mp3" id="3_53llr"]
 [ext_resource type="AudioStream" uid="uid://ckglk4r6yea6a" path="res://dozer/sounds/bulldozer_moving.mp3" id="4_2ggiw"]
-[ext_resource type="Texture2D" uid="uid://wetbyxy5l6gq" path="res://dozer/sprites/Hit.png" id="4_3qq7t"]
-[ext_resource type="Texture2D" uid="uid://8qrxgc33oc2h" path="res://dozer/sprites/Parry.png" id="6_olsbn"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fbc6f"]
+atlas = ExtResource("2_c4xwp")
+region = Rect2(0, 0, 112, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_n2kyf"]
-atlas = ExtResource("2_fbc6f")
-region = Rect2(0, 0, 128, 128)
+atlas = ExtResource("2_c4xwp")
+region = Rect2(112, 0, 112, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_n5k4n"]
-atlas = ExtResource("3_0dsod")
-region = Rect2(0, 0, 112, 80)
+[sub_resource type="AtlasTexture" id="AtlasTexture_c4xwp"]
+atlas = ExtResource("2_jhbuo")
+region = Rect2(0, 0, 112, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_1gl0k"]
-atlas = ExtResource("3_0dsod")
-region = Rect2(112, 0, 112, 80)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_vpj3v"]
-atlas = ExtResource("4_3qq7t")
-region = Rect2(0, 0, 112, 80)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_h0mry"]
-atlas = ExtResource("4_3qq7t")
-region = Rect2(112, 0, 112, 80)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_gr6mr"]
-atlas = ExtResource("4_3qq7t")
-region = Rect2(224, 0, 112, 80)
+[sub_resource type="AtlasTexture" id="AtlasTexture_is1xr"]
+atlas = ExtResource("2_jhbuo")
+region = Rect2(112, 0, 112, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kpo34"]
-atlas = ExtResource("2_fbc6f")
-region = Rect2(0, 0, 128, 128)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_00gv6"]
-atlas = ExtResource("6_olsbn")
-region = Rect2(0, 0, 112, 80)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_g4n1q"]
-atlas = ExtResource("6_olsbn")
-region = Rect2(112, 0, 112, 80)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_5f5y7"]
-atlas = ExtResource("6_olsbn")
-region = Rect2(224, 0, 112, 80)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_fuiq7"]
-atlas = ExtResource("6_olsbn")
-region = Rect2(336, 0, 112, 80)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_0dsod"]
-atlas = ExtResource("2_fbc6f")
-region = Rect2(0, 0, 128, 128)
+atlas = ExtResource("2_jhbuo")
+region = Rect2(224, 0, 112, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_a6j0l"]
 animations = [{
 "frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fbc6f")
+}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_n2kyf")
 }],
@@ -66,59 +39,35 @@ animations = [{
 "name": &"attack",
 "speed": 30.0
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_n5k4n")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_1gl0k")
-}],
+"frames": [],
 "loop": false,
 "name": &"death",
 "speed": 15.0
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_vpj3v")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_h0mry")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_gr6mr")
-}],
+"frames": [],
 "loop": false,
 "name": &"hit",
 "speed": 15.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_kpo34")
+"texture": SubResource("AtlasTexture_c4xwp")
 }],
 "loop": true,
 "name": &"idle",
 "speed": 15.0
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_00gv6")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_g4n1q")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_5f5y7")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_fuiq7")
-}],
+"frames": [],
 "loop": false,
 "name": &"parry",
 "speed": 15.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_0dsod")
+"texture": SubResource("AtlasTexture_is1xr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kpo34")
 }],
 "loop": true,
 "name": &"walk",
@@ -126,7 +75,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_f2yte"]
-size = Vector2(28, 21.75)
+size = Vector2(79, 44)
 
 [node name="Dozer" type="CharacterBody2D" groups=["damager"]]
 z_index = 1000
@@ -134,43 +83,38 @@ collision_layer = 2
 script = ExtResource("1_qe0wl")
 
 [node name="VisualPivot" type="Node2D" parent="."]
-position = Vector2(-2, 0)
-
-[node name="AnimatedSprite2D_bak" type="AnimatedSprite2D" parent="VisualPivot"]
-visible = false
-position = Vector2(-8, -20)
-scale = Vector2(0.910714, 0.910714)
-sprite_frames = SubResource("SpriteFrames_a6j0l")
-animation = &"walk"
-autoplay = "idle"
-frame_progress = 0.829065
-flip_h = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="VisualPivot"]
-position = Vector2(-14, -19)
-scale = Vector2(0.369419, 0.369419)
+position = Vector2(0, -20)
 sprite_frames = SubResource("SpriteFrames_a6j0l")
-animation = &"attack"
+animation = &"walk"
 autoplay = "idle"
 flip_h = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-12, -10.125)
+position = Vector2(0, -22)
 shape = SubResource("RectangleShape2D_f2yte")
 
 [node name="IdleSound" type="AudioStreamPlayer2D" parent="."]
-position = Vector2(-7.00002, 2.42856)
+position = Vector2(-95, 16)
 stream = ExtResource("3_53llr")
 
 [node name="MovingSound" type="AudioStreamPlayer2D" parent="."]
-position = Vector2(-7.00002, 1.42856)
+position = Vector2(-95, 20)
 stream = ExtResource("4_2ggiw")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(-7.00002, -11.5714)
 zoom = Vector2(2, 2)
 position_smoothing_enabled = true
 
+[node name="RayFront" type="RayCast2D" parent="."]
+position = Vector2(16, 0)
+target_position = Vector2(0, 24)
+
 [node name="FloorRay" type="RayCast2D" parent="."]
-position = Vector2(-11, 0)
+position = Vector2(-9, 0)
+target_position = Vector2(0, 24)
+
+[node name="RayRear" type="RayCast2D" parent="."]
+position = Vector2(-36, 0)
 target_position = Vector2(0, 24)
