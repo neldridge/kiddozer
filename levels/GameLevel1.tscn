@@ -274,4 +274,5 @@ position = Vector2(653, -64)
 position = Vector2(453, -115)
 
 [node name="Dozer" parent="." instance=ExtResource("2_1kmda")]
-position = Vector2(51, -19)
+position = Vector2(40, -8)
+debug_draw = false
