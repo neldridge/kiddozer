@@ -1,18 +1,17 @@
-[gd_scene load_steps=13 format=3 uid="uid://cr06ayqsfufog"]
+[gd_scene load_steps=12 format=3 uid="uid://cr06ayqsfufog"]
 
 [ext_resource type="Script" uid="uid://cqbb3ongekr4h" path="res://dozer/dozer.gd" id="1_qe0wl"]
-[ext_resource type="Texture2D" uid="uid://p2tsjdvdal1p" path="res://rubble_moving.png" id="2_c4xwp"]
 [ext_resource type="Texture2D" uid="uid://ebshxo2e7pcv" path="res://rubble.png" id="2_jhbuo"]
 [ext_resource type="AudioStream" uid="uid://15lrx8d02qml" path="res://dozer/sounds/bulldozer_idle.mp3" id="3_53llr"]
 [ext_resource type="AudioStream" uid="uid://ckglk4r6yea6a" path="res://dozer/sounds/bulldozer_moving.mp3" id="4_2ggiw"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_fbc6f"]
-atlas = ExtResource("2_c4xwp")
-region = Rect2(0, 0, 112, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_n2kyf"]
-atlas = ExtResource("2_c4xwp")
+[sub_resource type="AtlasTexture" id="AtlasTexture_jhbuo"]
+atlas = ExtResource("2_jhbuo")
 region = Rect2(112, 0, 112, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fbc6f"]
+atlas = ExtResource("2_jhbuo")
+region = Rect2(224, 0, 112, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_c4xwp"]
 atlas = ExtResource("2_jhbuo")
@@ -30,10 +29,10 @@ region = Rect2(224, 0, 112, 64)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_fbc6f")
+"texture": SubResource("AtlasTexture_jhbuo")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_n2kyf")
+"texture": SubResource("AtlasTexture_fbc6f")
 }],
 "loop": false,
 "name": &"attack",
@@ -87,7 +86,7 @@ script = ExtResource("1_qe0wl")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="VisualPivot"]
 position = Vector2(0, -20)
 sprite_frames = SubResource("SpriteFrames_a6j0l")
-animation = &"walk"
+animation = &"attack"
 autoplay = "idle"
 flip_h = true
 
